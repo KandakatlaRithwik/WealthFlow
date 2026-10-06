@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Professional finance palette: deep slate-navy text, blue-to-teal brand,
+     crisp white surfaces. No pink, no neon — built to read as credible. */
+  --c-ink: 16 24 40;         /* #101828 — near-black navy, border/ring base */
+  --c-ink-700: 16 24 40;     /* #101828 — headings */
+  --c-ink-500: 71 84 103;    /* #475467 — body/secondary */
+  --c-ink-300: 152 162 179;  /* #98A2B3 — muted */
+  --c-paper: 255 255 255;    /* page background */
+  --c-paper-100: 255 255 255;
+  --c-paper-200: 242 244 247;/* #F2F4F7 */
+  --c-growth: 22 163 74;     /* #16A34A — emerald */
+  --c-growth-100: 220 252 231;
+  --c-growth-600: 21 128 61;
+  --c-rust: 220 38 38;       /* #DC2626 — standard finance red */
+  --c-rust-100: 254 226 226;
+  --c-gold: 180 131 13;      /* #B4830D — muted amber */
+  --c-brand: 29 78 216;      /* #1D4ED8 — finance blue */
+  --c-brand-2: 13 148 136;   /* #0D9488 — teal, gradient partner */
+}
+
+[data-theme="dark"] {
+  --c-ink: 226 232 240;
+  --c-ink-700: 241 245 249;
+  --c-ink-500: 148 163 184;
+  --c-ink-300: 100 116 139;
+  --c-paper: 10 14 23;       /* #0A0E17 */
+  --c-paper-100: 17 24 39;   /* #111827 */
+  --c-paper-200: 30 41 59;
+  --c-growth: 74 222 128;
+  --c-growth-100: 6 78 59;
+  --c-growth-600: 134 239 172;
+  --c-rust: 248 113 113;
+  --c-rust-100: 69 10 10;
+  --c-gold: 250 204 21;
+  --c-brand: 96 165 250;     /* lighter blue for dark bg */
+  --c-brand-2: 45 212 191;   /* lighter teal */
+}
+
+:root { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+@layer base {
+  html { @apply antialiased; }
+  body { @apply bg-paper text-ink transition-colors duration-200; }
+  ::selection { @apply bg-growth-100; }
+
+  /* Placeholder contrast fix — must stay readable against either theme's
+     input background, independent of the theme-aware ink/paper swap. */
+  input::placeholder, textarea::placeholder {
+    color: rgb(var(--c-ink-300));
+    opacity: 1;
+  }
+}
+
+@layer utilities {
+  .num { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  .card { @apply bg-paper-100 border border-ink/[0.06] rounded-xl shadow-card; }
+  .focus-ring { @apply outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-paper; }
+  .gradient-brand { background-image: linear-gradient(135deg, rgb(var(--c-brand)), rgb(var(--c-brand-2))); }
+  .text-gradient-brand {
+    background-image: linear-gradient(135deg, rgb(var(--c-brand)), rgb(var(--c-brand-2)));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  /* Subtle professional backdrop: faint dot grid, used app-wide at very low opacity */
+  .bg-dot-grid {
+    background-image: radial-gradient(rgb(var(--c-ink) / 0.07) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .btn-lift { transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease; }
+  .btn-lift:hover { transform: translateY(-1px); }
+  .btn-lift:active { transform: translateY(0); }
+  .watermark { pointer-events: none; user-select: none; }
+
+  /* The ONE input style used everywhere — every text input, select, textarea,
+     and date field in the app uses this class. Explicit bg/text colors so
+     the browser's native dark-mode form styling never overrides the theme. */
+  .input-field {
+    @apply w-full px-3.5 py-2.5 rounded-xl border border-ink/[0.14] bg-paper-100 text-sm text-ink-700 focus-ring focus:border-brand hover:border-ink/25 transition-colors;
+  }
+  .input-field::-webkit-calendar-picker-indicator {
+    filter: var(--date-icon-filter, none);
+  }
+  [data-theme="dark"] .input-field::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+}
